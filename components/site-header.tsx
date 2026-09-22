@@ -1,5 +1,7 @@
 import Link from "next/link"
 
+import { ThemeToggle } from "./theme-toggle"
+
 const navLinks = [
   { label: "The Estate", href: "/#estate" },
   { label: "Suites & Villas", href: "/rooms" },
@@ -58,6 +60,7 @@ export function SiteHeader() {
               person
             </span>
           </div>
+          <ThemeToggle />
         </div>
       </div>
     </header>
