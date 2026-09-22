@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation"
 import { Suspense, useState } from "react"
 
-import { DateRangePicker } from "@/components/date-range-picker"
+import { DatePicker } from "@/components/date-picker"
 import { getDefaultSearchDates } from "@/lib/search"
 
 function BookingSearchInner({
@@ -44,13 +44,25 @@ function BookingSearchInner({
 
   return (
     <form id={formId} onSubmit={handleSubmit} className={wrapperClassName}>
-      <DateRangePicker
-        checkIn={checkIn}
-        checkOut={checkOut}
-        onChange={(range) => {
-          setCheckIn(range.checkIn)
-          setCheckOut(range.checkOut)
+      <DatePicker
+        label="Check-In"
+        value={checkIn}
+        onChange={(value) => {
+          setCheckIn(value)
+          if (value >= checkOut) {
+            const nextDay = new Date(value + "T00:00:00.000Z")
+            nextDay.setUTCDate(nextDay.getUTCDate() + 1)
+            setCheckOut(nextDay.toISOString().split("T")[0])
+          }
         }}
+        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+      />
+
+      <DatePicker
+        label="Check-Out"
+        value={checkOut}
+        onChange={(value) => setCheckOut(value)}
+        disabled={(date) => date <= new Date(checkIn + "T00:00:00.000Z")}
       />
 
       <div className="flex flex-col gap-1">
