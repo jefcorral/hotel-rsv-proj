@@ -69,7 +69,7 @@ export default async function RoomsPage({ searchParams }: PageProps) {
                   <div className="lg:col-span-3 h-20 rounded bg-surface-container-low" />
                   <div className="lg:col-span-3 h-20 rounded bg-surface-container-low" />
                   <div className="lg:col-span-3 h-20 rounded bg-surface-container-low" />
-                  <div className="lg:col-span-3 h-20 rounded bg-primary" />
+                  <div className="lg:col-span-3 h-20 rounded bg-[#8A3B24]" />
                 </div>
               </div>
             }
@@ -202,7 +202,7 @@ export default async function RoomsPage({ searchParams }: PageProps) {
                     <div className="flex items-center gap-space-sm w-full sm:w-auto">
                       <Link
                         href={`/rooms/${room.slug}?checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guests}`}
-                        className="flex-1 sm:flex-initial bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg uppercase px-6 py-3 rounded transition-colors shadow-sm text-center"
+                        className="flex-1 sm:flex-initial bg-[#6C2510] hover:bg-[#8A3B24] text-white font-label-lg text-label-lg uppercase px-6 py-3 rounded transition-colors shadow-sm text-center"
                       >
                         Select Residence
                       </Link>

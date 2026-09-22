@@ -112,7 +112,7 @@ export function RoomSearchBar({
           <button
             type="button"
             onClick={() => updateSearch(checkIn, checkOut, guests)}
-            className="w-full h-full min-h-[58px] bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-wider rounded transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.99]"
+            className="w-full h-full min-h-[58px] bg-[#8A3B24] hover:bg-[#6C2510] text-white font-label-lg text-label-lg uppercase tracking-wider rounded transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.99]"
           >
             <span className="material-symbols-outlined text-[20px]">tune</span>
             <span>Update Search</span>

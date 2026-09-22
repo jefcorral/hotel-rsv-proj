@@ -333,9 +333,12 @@ export default async function RoomDetailPage({ params, searchParams }: PageProps
 
                 <Link
                   href={`/book?roomType=${roomType.slug}&checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guests}`}
-                  className="block w-full rounded bg-primary px-4 py-3 text-center font-label-lg text-label-lg uppercase tracking-wider text-on-primary transition-colors hover:bg-primary-container"
+                  className="block w-full rounded bg-[#6C2510] px-4 py-3.5 text-center font-label-lg text-label-lg uppercase tracking-wider text-white shadow-md transition-all duration-300 hover:bg-[#8A3B24] hover:shadow-lg flex items-center justify-center gap-2 group"
                 >
-                  Reserve This Residence
+                  <span>Reserve This Residence</span>
+                  <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">
+                    arrow_forward
+                  </span>
                 </Link>
 
                 <div className="mt-space-md">
@@ -344,7 +347,7 @@ export default async function RoomDetailPage({ params, searchParams }: PageProps
                       <div className="animate-pulse space-y-2">
                         <div className="h-12 rounded bg-surface-container-low" />
                         <div className="h-12 rounded bg-surface-container-low" />
-                        <div className="h-12 rounded bg-primary" />
+                        <div className="h-12 rounded bg-[#6C2510]" />
                       </div>
                     }
                   >
