@@ -3,8 +3,8 @@ import Link from "next/link"
 const villaLinks = [
   { label: "The Estate Grounds", href: "/" },
   { label: "Suites & Private Villas", href: "/rooms" },
-  { label: "Roman Bath Spa", href: "/amenities" },
-  { label: "Ristorante Belvedere", href: "/amenities" },
+  { label: "Roman Bath Spa", href: "/amenities#wellness" },
+  { label: "Ristorante Belvedere", href: "/amenities#dining" },
   { label: "Private Yacht Charters", href: "/gallery" },
   { label: "The Tuscan & Coastal Journal", href: "/reviews" },
 ]

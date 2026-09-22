@@ -152,10 +152,10 @@
   --popover-foreground: #2b1e1a;
   --primary: #8a3b24;
   --primary-foreground: #f9f6f0;
-  --primary-container: #6c2510;
+  --primary-container: #702f1c;
   --on-primary-container: #ffb6a1;
-  --secondary: #c59b27;
-  --secondary-foreground: #2b1e1a;
+  --secondary: #775a00;
+  --secondary-foreground: #f9f6f0;
   --secondary-container: #fece57;
   --on-secondary-container: #735700;
   --muted: #f0eee8;
@@ -175,17 +175,17 @@
   --ring: #8a3b24;
   --radius: 0.5rem;
   --chart-1: #8a3b24;
-  --chart-2: #c59b27;
+  --chart-2: #775a00;
   --chart-3: #604f4a;
   --chart-4: #2b1e1a;
-  --chart-5: #6c2510;
+  --chart-5: #702f1c;
 
   /* Villa Aurelia material tokens aligned with DESIGN.md */
   --surface: #f9f6f0;
   --on-surface: #2b1e1a;
   --surface-variant: #e5e2dc;
   --on-surface-variant: #736159;
-  --outline: #e6ddd2;
+  --outline: #88726d;
   --outline-variant: #dbc1ba;
   --primary-fixed: #ffdbd1;
   --on-primary-fixed: #3b0900;

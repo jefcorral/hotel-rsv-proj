@@ -51,7 +51,7 @@ export function SiteHeader() {
           </div>
           <Link
             href="/rooms"
-            className="hidden items-center justify-center rounded bg-primary-container px-space-md py-2.5 font-label-lg text-label-lg uppercase text-on-primary shadow-sm transition-colors hover:bg-primary md:inline-flex"
+            className="hidden items-center justify-center rounded bg-primary px-space-md py-2.5 font-label-lg text-label-lg uppercase text-on-primary shadow-sm transition-colors hover:bg-primary-container md:inline-flex"
           >
             Book Your Stay
           </Link>
