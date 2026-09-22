@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 
 const villaLinks = [
@@ -17,10 +18,12 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="flex flex-col items-start lg:col-span-4">
             <div className="mb-space-sm flex items-center gap-space-sm">
-              <img
+              <Image
                 alt="Villa Aurelia Emblem"
                 className="h-9 w-auto object-contain"
-                src="https://lh3.googleusercontent.com/aida/AEtjO1Vi2lAoMem20cyNeyKeM6mJ7UvUSnx2YEHyjbPR_Gg3UXqA75pmd-Evzh-Jf0bGee1Co7okz0BJX2h8xkGWmK2GSZEi01I26V8y8IcroaLZ7PF4BySN0oHluRTSt1g6Uq0HOUCjkNJTjNCkmOF5kWwxYtUr5O0OIktIm_4FrYHfqBQ0TnSeiHLxuIhHokCK7KlIvGCCP5UoXJBhLWojd_xIv_JomPX6mu_R1g257OjP8EfJVSdBsreYATI"
+                height={36}
+                src="/images/villa-aurelia-emblem.png"
+                width={120}
               />
               <span className="font-headline-sm text-headline-sm tracking-tight text-on-surface">
                 Villa Aurelia
