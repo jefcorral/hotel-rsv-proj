@@ -1,11 +1,10 @@
-import Image from "next/image"
 import Link from "next/link"
 
 const navLinks = [
   { label: "The Estate", href: "/#estate" },
   { label: "Suites & Villas", href: "/rooms" },
-  { label: "Wellness & Spa", href: "/amenities" },
-  { label: "Gastronomy", href: "/amenities" },
+  { label: "Wellness & Spa", href: "/amenities#wellness" },
+  { label: "Gastronomy", href: "/amenities#dining" },
   { label: "Experiences", href: "/gallery" },
   { label: "Journal", href: "/reviews" },
 ]
@@ -15,12 +14,10 @@ export function SiteHeader() {
     <header className="fixed top-0 left-0 z-50 w-full bg-surface/85 shadow-[0_1px_8px_rgba(43,30,26,0.05)] backdrop-blur-md">
       <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between gap-4 px-margin md:px-margin-tablet lg:px-margin-desktop">
         <div className="flex items-center gap-space-sm">
-          <Image
+          <img
             alt="Villa Aurelia Emblem"
             className="h-8 w-auto object-contain"
-            height={32}
             src="https://lh3.googleusercontent.com/aida/AEtjO1Vi2lAoMem20cyNeyKeM6mJ7UvUSnx2YEHyjbPR_Gg3UXqA75pmd-Evzh-Jf0bGee1Co7okz0BJX2h8xkGWmK2GSZEi01I26V8y8IcroaLZ7PF4BySN0oHluRTSt1g6Uq0HOUCjkNJTjNCkmOF5kWwxYtUr5O0OIktIm_4FrYHfqBQ0TnSeiHLxuIhHokCK7KlIvGCCP5UoXJBhLWojd_xIv_JomPX6mu_R1g257OjP8EfJVSdBsreYATI"
-            width={120}
           />
           <Link className="flex flex-col text-left" href="/">
             <span className="font-headline-sm text-headline-sm leading-none tracking-tight text-on-surface">
