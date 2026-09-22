@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { Suspense } from "react"
 
 import { BookingSearch } from "@/components/booking-search"
+import { prisma } from "@/lib/prisma"
 import { getAvailabilityCalendar, getRoomTypeBySlug, validateSearchParams } from "@/lib/search"
 import { formatCurrency } from "@/lib/utils"
 
@@ -20,6 +21,12 @@ export default async function RoomDetailPage({ params, searchParams }: PageProps
   const { slug } = await params
   const roomType = await getRoomTypeBySlug(slug)
   if (!roomType) notFound()
+
+  const similarRoomTypes = await prisma.roomType.findMany({
+    where: { hotelId: roomType.hotelId, isActive: true, id: { not: roomType.id } },
+    orderBy: { basePrice: "asc" },
+    take: 2,
+  })
 
   const query = await searchParams
   const { checkIn, checkOut, guests } = validateSearchParams(query)
@@ -67,6 +74,33 @@ export default async function RoomDetailPage({ params, searchParams }: PageProps
             <span className="text-outline-variant">/</span>
             <span className="text-on-surface font-semibold">{roomType.name}</span>
           </nav>
+          <div className="flex items-center gap-space-md font-label-sm text-label-sm uppercase tracking-widest text-tertiary">
+            <button
+              className="flex items-center gap-1.5 hover:text-primary transition-colors group"
+              type="button"
+            >
+              <span className="material-symbols-outlined text-[17px] text-outline group-hover:text-primary transition-colors">
+                share
+              </span>
+              <span>Share Suite</span>
+            </button>
+            <button
+              className="flex items-center gap-1.5 hover:text-primary transition-colors group"
+              type="button"
+            >
+              <span className="material-symbols-outlined text-[17px] text-outline group-hover:text-primary transition-colors">
+                bookmark
+              </span>
+              <span>Save to Wishlist</span>
+            </button>
+            <button
+              className="flex items-center gap-1.5 text-primary hover:text-[#8A3B24] font-semibold transition-colors"
+              type="button"
+            >
+              <span className="material-symbols-outlined text-[17px]">view_in_ar</span>
+              <span>Virtual 3D Walkthrough</span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -110,6 +144,15 @@ export default async function RoomDetailPage({ params, searchParams }: PageProps
                 </div>
               ))}
             </div>
+            <button
+              className="absolute bottom-4 right-4 z-10 flex items-center gap-2 bg-surface/90 hover:bg-surface text-on-surface hover:text-primary font-label-sm text-label-sm uppercase tracking-wider px-3.5 py-2.5 rounded shadow-md backdrop-blur-md transition-all duration-300"
+              type="button"
+            >
+              <span className="material-symbols-outlined text-[18px]">
+                photo_library
+              </span>
+              <span>View All {roomType.photos.length || 1} Photographs &amp; Floorplan</span>
+            </button>
           </div>
         </div>
       </section>
@@ -359,6 +402,75 @@ export default async function RoomDetailPage({ params, searchParams }: PageProps
           </div>
         </div>
       </section>
+
+      {/* Similar Suites */}
+      {similarRoomTypes.length > 0 && (
+        <section className="w-full py-space-xl bg-surface-container-low">
+          <div className="max-w-[1440px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+            <div className="flex items-center justify-between mb-space-md">
+              <div>
+                <span className="font-label-sm text-label-sm uppercase tracking-[0.2em] text-primary block mb-2">
+                  You May Also Admire
+                </span>
+                <h2 className="font-headline-sm text-headline-sm text-on-surface">
+                  Similar Sanctuaries
+                </h2>
+              </div>
+              <Link
+                href={`/rooms?checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guests}`}
+                className="flex items-center gap-1 font-label-md text-label-md uppercase text-primary hover:text-[#8A3B24] font-semibold transition-colors"
+              >
+                <span>View All</span>
+                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+              {similarRoomTypes.map((room) => (
+                <div
+                  key={room.id}
+                  className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group"
+                >
+                  <div className="relative h-64 overflow-hidden">
+                    <Image
+                      src={room.photos[0] ?? "/images/villa-aurelia-emblem.png"}
+                      alt={room.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-on-surface/50 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <span className="font-label-sm text-label-sm uppercase tracking-wider">
+                        {room.bedType}
+                      </span>
+                      <h3 className="font-headline-sm text-headline-sm text-white mt-1">
+                        {room.name}
+                      </h3>
+                    </div>
+                  </div>
+                  <div className="p-space-md flex items-center justify-between">
+                    <div>
+                      <span className="font-headline-sm text-headline-sm text-primary font-bold">
+                        {formatCurrency(Number(room.basePrice), roomType.hotel.currency)}
+                      </span>
+                      <span className="font-body-sm text-body-sm text-on-surface-variant">
+                        {" "}
+                        / night
+                      </span>
+                    </div>
+                    <Link
+                      href={`/rooms/${room.slug}?checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guests}`}
+                      className="bg-surface-container hover:bg-[#6C2510] hover:text-white text-on-surface font-label-sm text-label-sm uppercase px-3 py-2 rounded transition-colors"
+                    >
+                      View Sanctuary
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   )
 }
