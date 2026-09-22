@@ -143,25 +143,26 @@
 }
 
 :root {
-  --background: #fcf9f3;
-  --foreground: #1c1c18;
+  /* Villa Aurelia design spec from DESIGN.md */
+  --background: #f9f6f0;
+  --foreground: #2b1e1a;
   --card: #ffffff;
-  --card-foreground: #1c1c18;
+  --card-foreground: #2b1e1a;
   --popover: #ffffff;
-  --popover-foreground: #1c1c18;
-  --primary: #6c2510;
+  --popover-foreground: #2b1e1a;
+  --primary: #8a3b24;
   --primary-foreground: #ffffff;
-  --primary-container: #8a3b24;
+  --primary-container: #6c2510;
   --on-primary-container: #ffb6a1;
-  --secondary: #775a00;
-  --secondary-foreground: #ffffff;
+  --secondary: #c59b27;
+  --secondary-foreground: #2b1e1a;
   --secondary-container: #fece57;
   --on-secondary-container: #735700;
   --muted: #f0eee8;
-  --muted-foreground: #55433e;
+  --muted-foreground: #736159;
   --accent: #604f4a;
   --accent-foreground: #ffffff;
-  --tertiary: #483834;
+  --tertiary: #2b1e1a;
   --tertiary-container: #604f4a;
   --on-tertiary: #ffffff;
   --on-tertiary-container: #d9c2bb;
@@ -171,27 +172,27 @@
   --on-error-container: #93000a;
   --border: #e6ddd2;
   --input: #e6ddd2;
-  --ring: #6c2510;
+  --ring: #8a3b24;
   --radius: 0.5rem;
-  --chart-1: #6c2510;
-  --chart-2: #775a00;
+  --chart-1: #8a3b24;
+  --chart-2: #c59b27;
   --chart-3: #604f4a;
-  --chart-4: #483834;
-  --chart-5: #8a3b24;
+  --chart-4: #2b1e1a;
+  --chart-5: #6c2510;
 
   /* Villa Aurelia material tokens */
-  --surface: #fcf9f3;
-  --on-surface: #1c1c18;
+  --surface: #f9f6f0;
+  --on-surface: #2b1e1a;
   --surface-variant: #e5e2dc;
-  --on-surface-variant: #55433e;
-  --outline: #88726d;
+  --on-surface-variant: #736159;
+  --outline: #e6ddd2;
   --outline-variant: #dbc1ba;
   --primary-fixed: #ffdbd1;
   --on-primary-fixed: #3b0900;
   --secondary-fixed: #ffdf98;
   --on-secondary-fixed: #251a00;
   --surface-tint: #98462e;
-  --surface-bright: #fcf9f3;
+  --surface-bright: #f9f6f0;
   --surface-dim: #dcdad4;
   --surface-container: #f0eee8;
   --surface-container-low: #f6f3ed;
@@ -203,22 +204,22 @@
   --inverse-primary: #ffb5a0;
 
   --sidebar: #f6f3ed;
-  --sidebar-foreground: #1c1c18;
-  --sidebar-primary: #6c2510;
+  --sidebar-foreground: #2b1e1a;
+  --sidebar-primary: #8a3b24;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f0eee8;
-  --sidebar-accent-foreground: #1c1c18;
+  --sidebar-accent-foreground: #2b1e1a;
   --sidebar-border: #e6ddd2;
-  --sidebar-ring: #6c2510;
+  --sidebar-ring: #8a3b24;
 }
 
 .dark {
   --background: #1c1c18;
-  --foreground: #fcf9f3;
+  --foreground: #f9f6f0;
   --card: #2b2622;
-  --card-foreground: #fcf9f3;
+  --card-foreground: #f9f6f0;
   --popover: #2b2622;
-  --popover-foreground: #fcf9f3;
+  --popover-foreground: #f9f6f0;
   --primary: #ffdbd1;
   --primary-foreground: #3b0900;
   --primary-container: #8a3b24;
@@ -239,12 +240,12 @@
   --destructive-foreground: #690005;
   --error-container: #ffdad6;
   --on-error-container: #93000a;
-  --border: rgba(252, 249, 243, 0.1);
-  --input: rgba(252, 249, 243, 0.15);
+  --border: rgba(249, 246, 240, 0.1);
+  --input: rgba(249, 246, 240, 0.15);
   --ring: #ffdbd1;
 
   --surface: #1c1c18;
-  --on-surface: #fcf9f3;
+  --on-surface: #f9f6f0;
   --surface-variant: #31312d;
   --on-surface-variant: #d8c2bb;
   --outline: #88726d;
@@ -261,17 +262,17 @@
   --surface-container-lowest: #0f0f0c;
   --surface-container-high: #31312d;
   --surface-container-highest: #3c3c37;
-  --inverse-surface: #fcf9f3;
+  --inverse-surface: #f9f6f0;
   --inverse-on-surface: #1c1c18;
   --inverse-primary: #6c2510;
 
   --sidebar: #252420;
-  --sidebar-foreground: #fcf9f3;
+  --sidebar-foreground: #f9f6f0;
   --sidebar-primary: #ffdbd1;
   --sidebar-primary-foreground: #3b0900;
   --sidebar-accent: #31312d;
-  --sidebar-accent-foreground: #fcf9f3;
-  --sidebar-border: rgba(252, 249, 243, 0.1);
+  --sidebar-accent-foreground: #f9f6f0;
+  --sidebar-border: rgba(249, 246, 240, 0.1);
   --sidebar-ring: #ffdbd1;
 }
 
