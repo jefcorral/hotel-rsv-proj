@@ -39,6 +39,12 @@ export default function RootLayout({
         "font-sans"
       )}
     >
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+          rel="stylesheet"
+        />
+      </head>
       <body className="min-h-screen bg-surface text-on-surface">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
