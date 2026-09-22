@@ -114,6 +114,9 @@
   --color-on-primary-fixed: var(--on-primary-fixed);
   --color-secondary-fixed: var(--secondary-fixed);
   --color-on-secondary-fixed: var(--on-secondary-fixed);
+  --color-on-primary: var(--on-primary);
+  --color-on-secondary: var(--on-secondary);
+  --color-on-tertiary: var(--on-tertiary);
   --color-tertiary: var(--tertiary);
   --color-tertiary-container: var(--tertiary-container);
   --color-on-tertiary: var(--on-tertiary);
@@ -152,10 +155,12 @@
   --popover-foreground: #2b1e1a;
   --primary: #8a3b24;
   --primary-foreground: #ffffff;
+  --on-primary: #ffffff;
   --primary-container: #702f1c;
   --on-primary-container: #ffb6a1;
   --secondary: #775a00;
   --secondary-foreground: #ffffff;
+  --on-secondary: #ffffff;
   --secondary-container: #fece57;
   --on-secondary-container: #735700;
   --muted: #f0eee8;
@@ -222,10 +227,12 @@
   --popover-foreground: #f9f6f0;
   --primary: #ffdbd1;
   --primary-foreground: #3b0900;
+  --on-primary: #3b0900;
   --primary-container: #8a3b24;
   --on-primary-container: #ffb6a1;
   --secondary: #ffdf98;
   --secondary-foreground: #251a00;
+  --on-secondary: #251a00;
   --secondary-container: #fece57;
   --on-secondary-container: #735700;
   --muted: #31312d;

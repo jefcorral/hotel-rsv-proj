@@ -33,7 +33,7 @@ export default function HomePage() {
                   <span>Explore The Suites</span>
                   <span className="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
                 </a>
-                <a className="px-space-lg py-3.5 bg-surface-container-lowest/30 hover:bg-surface-container-lowest/50 text-surface backdrop-blur-md font-label-lg text-label-lg uppercase tracking-wider rounded transition-all flex items-center gap-space-xs" href="#estate-essence">
+                <a className="px-space-lg py-3.5 bg-surface-container-lowest/30 hover:bg-surface-container-lowest/50 text-white backdrop-blur-md font-label-lg text-label-lg uppercase tracking-wider rounded transition-all flex items-center gap-space-xs" href="#estate-essence">
                   <span className="material-symbols-outlined text-[18px]">play_circle</span>
                   <span>Estate Story</span>
                 </a>
