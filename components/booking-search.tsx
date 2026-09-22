@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation"
 import { Suspense, useState } from "react"
 
+import { DateRangePicker } from "@/components/date-range-picker"
 import { getDefaultSearchDates } from "@/lib/search"
 
 function BookingSearchInner({
@@ -43,43 +44,14 @@ function BookingSearchInner({
 
   return (
     <form id={formId} onSubmit={handleSubmit} className={wrapperClassName}>
-      <div className="flex flex-col gap-1">
-        <label
-          htmlFor="checkIn"
-          className="font-label-sm text-label-sm uppercase text-outline tracking-wider flex items-center gap-1"
-        >
-          <span className="material-symbols-outlined text-[15px] text-primary">
-            calendar_today
-          </span>
-          Check-In
-        </label>
-        <input
-          id="checkIn"
-          type="date"
-          value={checkIn}
-          onChange={(e) => setCheckIn(e.target.value)}
-          className="w-full rounded bg-surface-container-low px-2 py-1.5 font-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
-        />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <label
-          htmlFor="checkOut"
-          className="font-label-sm text-label-sm uppercase text-outline tracking-wider flex items-center gap-1"
-        >
-          <span className="material-symbols-outlined text-[15px] text-primary">
-            calendar_month
-          </span>
-          Check-Out
-        </label>
-        <input
-          id="checkOut"
-          type="date"
-          value={checkOut}
-          onChange={(e) => setCheckOut(e.target.value)}
-          className="w-full rounded bg-surface-container-low px-2 py-1.5 font-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
-        />
-      </div>
+      <DateRangePicker
+        checkIn={checkIn}
+        checkOut={checkOut}
+        onChange={(range) => {
+          setCheckIn(range.checkIn)
+          setCheckOut(range.checkOut)
+        }}
+      />
 
       <div className="flex flex-col gap-1">
         <label

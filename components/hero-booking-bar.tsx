@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation"
 import { Suspense, useState } from "react"
 
+import { DateRangePicker } from "@/components/date-range-picker"
 import { getDefaultSearchDates } from "@/lib/search"
 
 function HeroBookingBarInner() {
@@ -31,29 +32,14 @@ function HeroBookingBarInner() {
 
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-sm lg:gap-space-md items-center">
-      <div className="lg:col-span-3 flex flex-col bg-surface-container-low/70 hover:bg-surface-container-low rounded p-space-sm cursor-pointer transition-colors">
-        <span className="font-label-sm text-label-sm uppercase text-outline tracking-wider flex items-center gap-1">
-          <span className="material-symbols-outlined text-[15px] text-primary">calendar_today</span>
-          Check-In Date
-        </span>
-        <input
-          type="date"
-          value={checkIn}
-          onChange={(e) => setCheckIn(e.target.value)}
-          className="mt-1 w-full bg-transparent font-headline-sm text-headline-sm text-on-surface focus:outline-none"
-        />
-      </div>
-
-      <div className="lg:col-span-3 flex flex-col bg-surface-container-low/70 hover:bg-surface-container-low rounded p-space-sm cursor-pointer transition-colors">
-        <span className="font-label-sm text-label-sm uppercase text-outline tracking-wider flex items-center gap-1">
-          <span className="material-symbols-outlined text-[15px] text-primary">calendar_month</span>
-          Check-Out Date
-        </span>
-        <input
-          type="date"
-          value={checkOut}
-          onChange={(e) => setCheckOut(e.target.value)}
-          className="mt-1 w-full bg-transparent font-headline-sm text-headline-sm text-on-surface focus:outline-none"
+      <div className="lg:col-span-6 flex flex-col bg-surface-container-low/70 hover:bg-surface-container-low rounded p-space-sm cursor-pointer transition-colors">
+        <DateRangePicker
+          checkIn={checkIn}
+          checkOut={checkOut}
+          onChange={(range) => {
+            setCheckIn(range.checkIn)
+            setCheckOut(range.checkOut)
+          }}
         />
       </div>
 
