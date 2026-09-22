@@ -294,3 +294,11 @@
     @apply font-sans;
   }
 }
+
+/* Room pages use the generated code.html token semantics */
+.room-generated-theme {
+  --primary: #6c2510;
+  --on-primary: #ffffff;
+  --primary-container: #8a3b24;
+  --on-primary-container: #ffdad3;
+}
