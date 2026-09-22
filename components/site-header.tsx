@@ -4,12 +4,12 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 const navLinks = [
-  { label: "The Estate", href: "#estate" },
-  { label: "Suites & Villas", href: "#suites" },
-  { label: "Wellness & Spa", href: "#wellness" },
-  { label: "Gastronomy", href: "#gastronomy" },
-  { label: "Experiences", href: "#experiences" },
-  { label: "Journal", href: "#journal" },
+  { label: "The Estate", href: "/#estate" },
+  { label: "Suites & Villas", href: "/rooms" },
+  { label: "Amenities", href: "/amenities" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Reviews", href: "/reviews" },
+  { label: "Contact", href: "/location" },
 ]
 
 export function SiteHeader() {
