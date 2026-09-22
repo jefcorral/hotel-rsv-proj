@@ -19,3 +19,24 @@ Single-hotel web reservation platform (not a marketplace).
 ## Status
 
 Initial planning and design phase.
+
+## Getting Started
+
+1. Copy `.env.example` to `.env` and fill in your database credentials.
+2. Install dependencies:
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+3. Generate the Prisma client:
+   ```bash
+   npx prisma generate
+   ```
+4. Run migrations and seed the database:
+   ```bash
+   npx prisma migrate dev
+   npx prisma db seed
+   ```
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
