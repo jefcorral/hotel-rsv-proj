@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { Suspense } from "react"
 
 import { BookingSearch } from "@/components/booking-search"
 import { getAvailabilityCalendar, getRoomTypeBySlug, validateSearchParams } from "@/lib/search"
@@ -31,136 +32,326 @@ export default async function RoomDetailPage({ params, searchParams }: PageProps
   const checkInStr = checkIn.toISOString().split("T")[0]
   const checkOutStr = checkOut.toISOString().split("T")[0]
 
+  const nights = Math.max(
+    1,
+    Math.round(
+      (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)
+    )
+  )
+  const nightlyPrice = roomType.basePrice
+  const totalPrice = nightlyPrice * nights
+
+  const images = roomType.photos.length
+    ? roomType.photos.slice(0, 5)
+    : ["/images/villa-aurelia-emblem.png"]
+
   return (
-    <main className="min-h-screen bg-surface pt-24 pb-20">
-      <section className="mx-auto max-w-[1440px] px-margin md:px-margin-tablet lg:px-margin-desktop">
-        <div className="mb-6">
-          <Link
-            href={`/rooms?checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guests}`}
-            className="font-label-md text-label-md uppercase text-primary hover:text-on-surface inline-flex items-center gap-1 transition-colors"
+    <main className="w-full bg-surface pt-20">
+      {/* Breadcrumb */}
+      <section className="w-full bg-surface border-b border-outline-variant/30 py-space-xs">
+        <div className="max-w-[1440px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop flex flex-wrap items-center justify-between gap-y-2 text-on-surface-variant">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center gap-2 font-label-sm text-label-sm uppercase tracking-wider text-outline"
           >
-            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-            Back to all residences
-          </Link>
+            <Link href="/" className="hover:text-primary transition-colors">
+              Home
+            </Link>
+            <span className="text-outline-variant">/</span>
+            <Link
+              href={`/rooms?checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guests}`}
+              className="hover:text-primary transition-colors"
+            >
+              Suites &amp; Sanctuaries
+            </Link>
+            <span className="text-outline-variant">/</span>
+            <span className="text-on-surface font-semibold">{roomType.name}</span>
+          </nav>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 gap-gutter-desktop lg:grid-cols-2 mb-space-xl">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-xl lg:aspect-[16/12]">
-            <Image
-              src={roomType.photos[0] ?? "/images/villa-aurelia-emblem.png"}
-              alt={roomType.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              priority
-            />
-          </div>
-          <div className="flex flex-col justify-center">
-            <span className="font-label-sm text-label-sm uppercase tracking-[0.2em] text-primary block mb-2">
-              {roomType.bedType}
-            </span>
-            <h1 className="font-headline-lg text-headline-lg text-on-surface mb-space-md">
-              {roomType.name}
-            </h1>
-            <p className="font-body-md text-body-md text-on-surface-variant mb-space-md leading-relaxed">
-              {roomType.description}
-            </p>
-
-            <div className="mb-space-md grid grid-cols-2 gap-space-md">
-              <div className="rounded bg-surface-container-low p-space-sm">
-                <span className="font-headline-md text-headline-md text-primary block">
-                  {roomType.maxGuests}
+      {/* Gallery */}
+      <section className="w-full pt-space-md pb-space-lg bg-surface">
+        <div className="max-w-[1440px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-space-xs rounded-xl overflow-hidden bg-surface-container-low p-1.5 shadow-[0_16px_36px_-8px_rgba(43,30,26,0.07)]">
+            <div className="lg:col-span-7 relative group overflow-hidden rounded-lg min-h-[380px] lg:min-h-[560px]">
+              <Image
+                src={images[0]}
+                alt={roomType.name}
+                fill
+                priority
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                sizes="(max-width: 1024px) 100vw, 60vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute bottom-4 left-4 text-white">
+                <span className="bg-surface/90 text-primary font-label-sm text-label-sm uppercase px-2.5 py-1 rounded backdrop-blur-md">
+                  Primary Chamber
                 </span>
-                <span className="font-label-sm text-label-sm uppercase text-on-surface-variant">
-                  Max Guests
-                </span>
-              </div>
-              <div className="rounded bg-surface-container-low p-space-sm">
-                <span className="font-headline-md text-headline-md text-primary block">
-                  {roomType.roomSize ? `${roomType.roomSize} m²` : "—"}
-                </span>
-                <span className="font-label-sm text-label-sm uppercase text-on-surface-variant">
-                  Living Space
-                </span>
+                <p className="font-headline-sm text-headline-sm mt-1 text-white/95">
+                  {roomType.name}
+                </p>
               </div>
             </div>
-
-            <div className="flex flex-wrap gap-2 mb-space-md">
-              {roomType.amenities.map((amenity) => (
-                <span
-                  key={amenity}
-                  className="rounded bg-surface-container px-2.5 py-1 font-label-sm text-label-sm text-on-surface-variant"
-                >
-                  {amenity}
-                </span>
-              ))}
-            </div>
-
-            <div className="rounded bg-surface-container-low p-space-md">
-              <span className="font-label-sm text-label-sm uppercase text-outline block">
-                Starting from
-              </span>
-              <span className="font-headline-sm text-headline-sm text-on-surface">
-                {formatCurrency(roomType.basePrice, roomType.hotel.currency)} / night
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-gutter-desktop lg:grid-cols-3 mb-space-xl">
-          <div className="lg:col-span-2">
-            <h2 className="font-headline-sm text-headline-sm text-on-surface mb-space-md">
-              Availability Calendar
-            </h2>
-            <div className="grid grid-cols-7 gap-2 text-center">
-              {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
+            <div className="lg:col-span-5 grid grid-cols-2 gap-space-xs">
+              {images.slice(1, 5).map((src, index) => (
                 <div
-                  key={day}
-                  className="font-label-sm text-label-sm uppercase text-outline py-2"
+                  key={index}
+                  className="relative group overflow-hidden rounded-lg h-[180px] lg:h-[275px]"
                 >
-                  {day}
+                  <Image
+                    src={src}
+                    alt={`${roomType.name} view ${index + 2}`}
+                    fill
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                    sizes="(max-width: 1024px) 50vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                 </div>
               ))}
-              {calendar.map((day) => {
-                const date = new Date(day.date + "T00:00:00.000Z")
-                const isSelected = day.date >= checkInStr && day.date < checkOutStr
-                const isAvailable = !day.isBlocked && day.availableCount > 0
-                const price = day.price > 0 ? day.price : roomType.basePrice
-
-                return (
-                  <div
-                    key={day.date}
-                    className={`
-                      rounded-lg p-2 transition-colors
-                      ${isSelected ? "bg-primary text-on-primary" : "bg-surface-container-lowest"}
-                      ${!isSelected && isAvailable ? "hover:bg-surface-container" : ""}
-                      ${!isAvailable && !isSelected ? "opacity-50" : ""}
-                    `}
-                  >
-                    <div className="font-label-md text-label-md">{date.getUTCDate()}</div>
-                    <div className="font-label-sm text-label-sm">
-                      {isAvailable ? formatCurrency(price, roomType.hotel.currency) : "—"}
-                    </div>
-                  </div>
-                )
-              })}
             </div>
           </div>
+        </div>
+      </section>
 
-          <div>
-            <div className="sticky top-24 rounded-xl bg-surface-container-lowest p-space-lg shadow-[0_20px_48px_-12px_rgba(43,30,26,0.14)]">
-              <h3 className="font-headline-sm text-headline-sm text-on-surface mb-space-sm">
-                Check Availability
-              </h3>
-              <div className="grid grid-cols-1 gap-4">
-                <BookingSearch />
+      {/* Main Content */}
+      <section className="w-full py-space-lg bg-surface">
+        <div className="max-w-[1440px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-start">
+            {/* Left Column */}
+            <div className="lg:col-span-8 flex flex-col space-y-space-xl">
+              <div className="flex flex-col">
+                <div className="flex flex-wrap items-center gap-2 mb-space-xs">
+                  <span className="bg-primary/10 text-primary font-label-sm text-label-sm uppercase tracking-widest px-2.5 py-1 rounded">
+                    {roomType.bedType}
+                  </span>
+                  <span className="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest px-2.5 py-1 rounded">
+                    {roomType.roomSize ? `${roomType.roomSize} m²` : "Residence"}
+                  </span>
+                </div>
+                <h1 className="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-1 mb-space-xs">
+                  {roomType.name}
+                </h1>
+                <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                  {roomType.description}
+                </p>
               </div>
-              <Link
-                href={`/book?roomType=${roomType.slug}&checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guests}`}
-                className="mt-4 block w-full rounded bg-primary px-4 py-3 text-center font-label-lg text-label-lg uppercase tracking-wider text-on-primary transition-colors hover:bg-primary-container"
-              >
-                Reserve This Residence
-              </Link>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-space-sm p-space-md bg-surface-container-low rounded-xl shadow-sm">
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary text-[28px] mt-0.5">
+                    group
+                  </span>
+                  <div>
+                    <span className="block font-label-sm text-label-sm uppercase tracking-wider text-outline">
+                      Occupancy
+                    </span>
+                    <span className="font-body-md text-body-md text-on-surface">
+                      Up to {roomType.maxGuests} guests
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary text-[28px] mt-0.5">
+                    bed
+                  </span>
+                  <div>
+                    <span className="block font-label-sm text-label-sm uppercase tracking-wider text-outline">
+                      Bed
+                    </span>
+                    <span className="font-body-md text-body-md text-on-surface">
+                      {roomType.bedType}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary text-[28px] mt-0.5">
+                    square_foot
+                  </span>
+                  <div>
+                    <span className="block font-label-sm text-label-sm uppercase tracking-wider text-outline">
+                      Living Area
+                    </span>
+                    <span className="font-body-md text-body-md text-on-surface">
+                      {roomType.roomSize ? `${roomType.roomSize} m²` : "—"}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary text-[28px] mt-0.5">
+                    landscape
+                  </span>
+                  <div>
+                    <span className="block font-label-sm text-label-sm uppercase tracking-wider text-outline">
+                      View
+                    </span>
+                    <span className="font-body-md text-body-md text-on-surface">
+                      Mediterranean
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="font-headline-sm text-headline-sm text-on-surface mb-space-md">
+                  Curated Amenities
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {roomType.amenities.map((amenity) => (
+                    <div
+                      key={amenity}
+                      className="flex items-center gap-3 text-on-surface-variant"
+                    >
+                      <span className="material-symbols-outlined text-[24px] text-secondary">
+                        check_circle
+                      </span>
+                      <span className="font-body-md text-body-md text-on-surface">
+                        {amenity}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h2 className="font-headline-sm text-headline-sm text-on-surface mb-space-md">
+                  Availability Calendar
+                </h2>
+                <div className="grid grid-cols-7 gap-2 text-center">
+                  {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
+                    <div
+                      key={day}
+                      className="font-label-sm text-label-sm uppercase text-outline py-2"
+                    >
+                      {day}
+                    </div>
+                  ))}
+                  {calendar.map((day) => {
+                    const date = new Date(day.date + "T00:00:00.000Z")
+                    const isSelected =
+                      day.date >= checkInStr && day.date < checkOutStr
+                    const isAvailable =
+                      !day.isBlocked && day.availableCount > 0
+                    const price = day.price > 0 ? day.price : roomType.basePrice
+
+                    return (
+                      <div
+                        key={day.date}
+                        className={`
+                          rounded-lg p-2 transition-colors
+                          ${isSelected ? "bg-primary text-on-primary" : "bg-surface-container-lowest"}
+                          ${!isSelected && isAvailable ? "hover:bg-surface-container" : ""}
+                          ${!isAvailable && !isSelected ? "opacity-50" : ""}
+                        `}
+                      >
+                        <div className="font-label-md text-label-md">
+                          {date.getUTCDate()}
+                        </div>
+                        <div className="font-label-sm text-label-sm">
+                          {isAvailable
+                            ? formatCurrency(price, roomType.hotel.currency)
+                            : "—"}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Reservation Hub */}
+            <div className="lg:col-span-4">
+              <div className="sticky top-24 rounded-xl bg-surface-container-lowest p-space-lg shadow-[0_20px_48px_-12px_rgba(43,30,26,0.14)]">
+                <div className="flex items-baseline justify-between mb-space-sm">
+                  <div>
+                    <span className="font-headline-md text-headline-md text-primary font-bold">
+                      {formatCurrency(nightlyPrice, roomType.hotel.currency)}
+                    </span>
+                    <span className="font-body-sm text-body-sm text-on-surface-variant">
+                      {" "}
+                      / night
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-space-md bg-surface-container-low rounded-xl mb-space-md">
+                  <div className="grid grid-cols-2 gap-4 text-center">
+                    <div>
+                      <span className="block font-label-sm text-label-sm uppercase text-outline">
+                        Check-In
+                      </span>
+                      <span className="font-body-md text-body-md text-on-surface font-semibold">
+                        {checkIn.toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="block font-label-sm text-label-sm uppercase text-outline">
+                        Check-Out
+                      </span>
+                      <span className="font-body-md text-body-md text-on-surface font-semibold">
+                        {checkOut.toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-outline-variant/30 text-center">
+                    <span className="font-label-sm text-label-sm uppercase text-outline">
+                      Guests
+                    </span>
+                    <span className="ml-2 font-body-md text-body-md text-on-surface font-semibold">
+                      {guests}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2 mb-space-md">
+                  <div className="flex justify-between font-body-md text-body-md text-on-surface">
+                    <span>
+                      {formatCurrency(nightlyPrice, roomType.hotel.currency)} x{" "}
+                      {nights} night{nights !== 1 && "s"}
+                    </span>
+                    <span>
+                      {formatCurrency(totalPrice, roomType.hotel.currency)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between font-body-md text-body-md text-on-surface-variant">
+                    <span>Taxes & fees</span>
+                    <span>Included</span>
+                  </div>
+                  <div className="flex justify-between font-headline-sm text-headline-sm text-on-surface pt-2 border-t border-outline-variant/30">
+                    <span>Total</span>
+                    <span>
+                      {formatCurrency(totalPrice, roomType.hotel.currency)}
+                    </span>
+                  </div>
+                </div>
+
+                <Link
+                  href={`/book?roomType=${roomType.slug}&checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guests}`}
+                  className="block w-full rounded bg-primary px-4 py-3 text-center font-label-lg text-label-lg uppercase tracking-wider text-on-primary transition-colors hover:bg-primary-container"
+                >
+                  Reserve This Residence
+                </Link>
+
+                <div className="mt-space-md">
+                  <Suspense
+                    fallback={
+                      <div className="animate-pulse space-y-2">
+                        <div className="h-12 rounded bg-surface-container-low" />
+                        <div className="h-12 rounded bg-surface-container-low" />
+                        <div className="h-12 rounded bg-primary" />
+                      </div>
+                    }
+                  >
+                    <BookingSearch />
+                  </Suspense>
+                </div>
+              </div>
             </div>
           </div>
         </div>
