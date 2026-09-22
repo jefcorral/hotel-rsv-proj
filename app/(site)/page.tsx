@@ -1,5 +1,7 @@
 import Link from "next/link"
 
+import { HeroBookingBar } from "@/components/hero-booking-bar"
+
 export const metadata = {
   title: "Villa Aurelia | Boutique Luxury Sanctuary",
   description:
@@ -43,45 +45,7 @@ export default function HomePage() {
           {/* Luxury Floating Booking Bar Overlapping Hero Base */}
           <div className="relative z-30 max-w-[1360px] mx-auto -mt-16 md:-mt-20 px-margin md:px-margin-tablet lg:px-margin-desktop w-full">
             <div className="bg-surface-container-lowest/95 backdrop-blur-xl rounded-xl p-space-md lg:p-space-lg shadow-[0_20px_48px_-12px_rgba(43,30,26,0.14)]">
-              <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-sm lg:gap-space-md items-center">
-                {/* Check In */}
-                <div className="lg:col-span-3 flex flex-col bg-surface-container-low/70 hover:bg-surface-container-low rounded p-space-sm cursor-pointer transition-colors">
-                  <span className="font-label-sm text-label-sm uppercase text-outline tracking-wider flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[15px] text-primary">calendar_today</span> Check-In Date
-                  </span>
-                  <div className="flex items-baseline justify-between mt-1">
-                    <span className="font-headline-sm text-headline-sm text-on-surface">18 Oct</span>
-                    <span className="font-label-md text-label-md text-on-surface-variant uppercase">Sat · 2025</span>
-                  </div>
-                </div>
-                {/* Check Out */}
-                <div className="lg:col-span-3 flex flex-col bg-surface-container-low/70 hover:bg-surface-container-low rounded p-space-sm cursor-pointer transition-colors">
-                  <span className="font-label-sm text-label-sm uppercase text-outline tracking-wider flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[15px] text-primary">calendar_month</span> Check-Out Date
-                  </span>
-                  <div className="flex items-baseline justify-between mt-1">
-                    <span className="font-headline-sm text-headline-sm text-on-surface">24 Oct</span>
-                    <span className="font-label-md text-label-md text-on-surface-variant uppercase">Fri · 6 Nights</span>
-                  </div>
-                </div>
-                {/* Guests & Rooms */}
-                <div className="lg:col-span-3 flex flex-col bg-surface-container-low/70 hover:bg-surface-container-low rounded p-space-sm cursor-pointer transition-colors">
-                  <span className="font-label-sm text-label-sm uppercase text-outline tracking-wider flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px] text-primary">person</span> Guests &amp; Suites
-                  </span>
-                  <div className="flex items-baseline justify-between mt-1">
-                    <span className="font-headline-sm text-headline-sm text-on-surface">2 Guests</span>
-                    <span className="font-label-md text-label-md text-on-surface-variant uppercase">1 Master Villa</span>
-                  </div>
-                </div>
-                {/* CTA Availability Button */}
-                <div className="lg:col-span-3 flex flex-col h-full justify-end">
-                  <button className="w-full h-full min-h-[58px] bg-primary hover:bg-primary-container text-on-primary rounded font-label-lg text-label-lg uppercase tracking-widest shadow-md transition-all flex items-center justify-center gap-2 group" type="button">
-                    <span>Check Availability</span>
-                    <span className="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>
-                  </button>
-                </div>
-              </form>
+              <HeroBookingBar />
               {/* Subtext / Code Access Bar */}
               <div className="mt-space-sm pt-space-xs flex flex-wrap items-center justify-between gap-space-sm text-on-surface-variant">
                 <div className="flex items-center gap-space-md">
