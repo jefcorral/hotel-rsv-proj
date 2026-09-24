@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs"
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 
+import authConfig from "@/auth.config"
 import { isMockMode } from "@/lib/mock"
 import { prisma } from "@/lib/prisma"
 
@@ -23,8 +24,7 @@ const MOCK_USERS = [
 ]
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  session: { strategy: "jwt" },
-  pages: { signIn: "/login" },
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -55,20 +55,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        token.id = user.id
-        token.role = (user as { role?: string }).role ?? "guest"
-      }
-      return token
-    },
-    session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
-        ;(session.user as { role?: string }).role = token.role as string
-      }
-      return session
-    },
-  },
 })
