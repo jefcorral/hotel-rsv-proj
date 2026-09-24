@@ -2,6 +2,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 
 import { HoldTimer } from "@/components/hold-timer"
+import { buildMockBooking } from "@/lib/mock"
 import { prisma } from "@/lib/prisma"
 import { formatCurrency } from "@/lib/utils"
 import { processMockPayment } from "./actions"
@@ -13,17 +14,31 @@ export const metadata = {
 }
 
 type PageProps = {
-  searchParams: Promise<{ ref?: string; error?: string }>
+  searchParams: Promise<{
+    ref?: string
+    error?: string
+    roomType?: string
+    checkIn?: string
+    checkOut?: string
+    guests?: string
+    name?: string
+    email?: string
+    phone?: string
+  }>
 }
 
 export default async function CheckoutPage({ searchParams }: PageProps) {
-  const { ref, error } = await searchParams
+  const params = await searchParams
+  const { ref, error } = params
   if (!ref) notFound()
 
-  const booking = await prisma.booking.findUnique({
-    where: { id: ref },
-    include: { roomType: true, hotel: true },
-  })
+  const booking =
+    ref === "mock"
+      ? buildMockBooking(params)
+      : await prisma.booking.findUnique({
+          where: { id: ref },
+          include: { roomType: true, hotel: true },
+        })
   if (!booking) notFound()
 
   const currency = booking.currency || booking.hotel.currency
@@ -186,6 +201,13 @@ export default async function CheckoutPage({ searchParams }: PageProps) {
                     )}
                     <form action={processMockPayment} className="space-y-space-md" id="payment-element-form">
                       <input type="hidden" name="bookingId" value={booking.id} />
+                      <input type="hidden" name="roomType" value={booking.roomType.slug} />
+                      <input type="hidden" name="checkIn" value={booking.checkIn.toISOString().split("T")[0]} />
+                      <input type="hidden" name="checkOut" value={booking.checkOut.toISOString().split("T")[0]} />
+                      <input type="hidden" name="guests" value={booking.guestCount} />
+                      <input type="hidden" name="guestName" value={booking.guestName} />
+                      <input type="hidden" name="guestEmail" value={booking.guestEmail} />
+                      <input type="hidden" name="guestPhone" value={booking.guestPhone ?? ""} />
                       {/* Card Number with Live Brand Icons */}
                       <div className="flex flex-col gap-1.5">
                         <div className="flex items-center justify-between">

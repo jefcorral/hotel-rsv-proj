@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
+import { buildMockBooking } from "@/lib/mock"
 import { prisma } from "@/lib/prisma"
 import { formatCurrency } from "@/lib/utils"
 
@@ -11,17 +12,31 @@ export const metadata = {
 }
 
 type PageProps = {
-  searchParams: Promise<{ ref?: string; reason?: string }>
+  searchParams: Promise<{
+    ref?: string
+    reason?: string
+    roomType?: string
+    checkIn?: string
+    checkOut?: string
+    guests?: string
+    name?: string
+    email?: string
+    phone?: string
+  }>
 }
 
 export default async function RetryPage({ searchParams }: PageProps) {
-  const { ref } = await searchParams
+  const params = await searchParams
+  const { ref } = params
   if (!ref) notFound()
 
-  const booking = await prisma.booking.findUnique({
-    where: { id: ref },
-    include: { roomType: true, hotel: true },
-  })
+  const booking =
+    ref === "mock"
+      ? buildMockBooking(params)
+      : await prisma.booking.findUnique({
+          where: { id: ref },
+          include: { roomType: true, hotel: true },
+        })
   if (!booking) notFound()
 
   const currency = booking.currency || booking.hotel.currency
@@ -33,7 +48,19 @@ export default async function RetryPage({ searchParams }: PageProps) {
         (1000 * 60 * 60 * 24)
     )
   )
-  const retryUrl = `/book/checkout?ref=${booking.id}`
+  const retryUrl =
+    booking.id === "MOCK-DEMO"
+      ? `/book/checkout?${new URLSearchParams({
+          ref: "mock",
+          roomType: booking.roomType.slug,
+          checkIn: booking.checkIn.toISOString().split("T")[0],
+          checkOut: booking.checkOut.toISOString().split("T")[0],
+          guests: String(booking.guestCount),
+          name: booking.guestName,
+          email: booking.guestEmail,
+          phone: booking.guestPhone ?? "",
+        }).toString()}`
+      : `/book/checkout?ref=${booking.id}`
 
   return (
     <div className="bg-surface room-generated-theme">

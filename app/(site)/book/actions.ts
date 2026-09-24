@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation"
 
+import { isMockMode } from "@/lib/mock"
 import { prisma } from "@/lib/prisma"
 import { validateSearchParams } from "@/lib/search"
 
@@ -34,6 +35,20 @@ export async function createBooking(formData: FormData) {
 
   if (!firstName || !lastName || !email || !roomTypeSlug) {
     redirect(`${backUrl}&error=missing`)
+  }
+
+  if (isMockMode) {
+    const qs = new URLSearchParams({
+      ref: "mock",
+      roomType: roomTypeSlug,
+      checkIn: str(formData, "checkIn"),
+      checkOut: str(formData, "checkOut"),
+      guests: String(guests),
+      name: [title, firstName, lastName].filter(Boolean).join(" "),
+      email,
+      phone: phone ? `${phoneCode} ${phone}`.trim() : "",
+    })
+    redirect(`/book/checkout?${qs.toString()}`)
   }
 
   const roomType = await prisma.roomType.findFirst({

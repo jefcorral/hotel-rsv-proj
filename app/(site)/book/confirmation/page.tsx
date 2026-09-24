@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
+import { buildMockBooking } from "@/lib/mock"
 import { prisma } from "@/lib/prisma"
 import { formatCurrency } from "@/lib/utils"
 
@@ -11,20 +12,37 @@ export const metadata = {
 }
 
 type PageProps = {
-  searchParams: Promise<{ ref?: string }>
+  searchParams: Promise<{
+    ref?: string
+    roomType?: string
+    checkIn?: string
+    checkOut?: string
+    guests?: string
+    name?: string
+    email?: string
+    phone?: string
+    paid?: string
+  }>
 }
 
 export default async function BookingConfirmationPage({ searchParams }: PageProps) {
-  const { ref } = await searchParams
+  const params = await searchParams
+  const { ref } = params
   if (!ref) notFound()
 
-  const booking = await prisma.booking.findUnique({
-    where: { id: ref },
-    include: { roomType: true, hotel: true, payments: true },
-  })
+  const booking =
+    ref === "mock"
+      ? buildMockBooking(params)
+      : await prisma.booking.findUnique({
+          where: { id: ref },
+          include: { roomType: true, hotel: true, payments: true },
+        })
   if (!booking) notFound()
 
-  const paid = booking.payments.some((p) => p.status === "succeeded")
+  const paid =
+    booking.id === "MOCK-DEMO"
+      ? params.paid === "1"
+      : booking.payments.some((p) => p.status === "succeeded")
 
   const currency = booking.currency || booking.hotel.currency
   const nights = Math.max(
