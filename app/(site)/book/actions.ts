@@ -107,5 +107,5 @@ export async function createBooking(formData: FormData) {
     redirect(`${backUrl}&error=unavailable`)
   }
 
-  redirect(`/book/confirmation?ref=${booking.id}`)
+  redirect(`/book/checkout?ref=${booking.id}`)
 }
