@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { isMockMode, mockHotel, mockRoomTypes } from "@/lib/mock"
 
 export type SearchAvailabilityInput = {
   checkIn?: string
@@ -92,6 +93,34 @@ export async function searchRoomAvailability(
   guests: number
 }> {
   const { checkIn, checkOut, guests } = validateSearchParams(input)
+
+  if (isMockMode) {
+    const totalNights = Math.max(
+      1,
+      Math.round((checkOut.getTime() - checkIn.getTime()) / 86400000)
+    )
+    const results: RoomSearchResult[] = mockRoomTypes
+      .filter((r) => r.maxGuests >= guests)
+      .map((r) => ({
+        id: r.id,
+        slug: r.slug,
+        name: r.name,
+        description: r.description,
+        bedType: r.bedType,
+        maxGuests: r.maxGuests,
+        roomSize: r.roomSize,
+        basePrice: r.basePrice,
+        extraGuestFee: r.extraGuestFee,
+        amenities: r.amenities,
+        photos: r.photos,
+        availableCount: 4,
+        totalNights,
+        totalPrice: r.basePrice * totalNights,
+        pricePerNight: r.basePrice,
+      }))
+    return { hotel: mockHotel, results, checkIn, checkOut, guests }
+  }
+
   const hotel = await prisma.hotel.findFirst({ where: { slug: "villa-aurelia" } })
   if (!hotel) return { hotel: null, results: [], checkIn, checkOut, guests }
 
@@ -153,6 +182,10 @@ export async function searchRoomAvailability(
 }
 
 export async function getRoomTypeBySlug(slug: string) {
+  if (isMockMode) {
+    return mockRoomTypes.find((r) => r.slug === slug) ?? null
+  }
+
   const roomType = await prisma.roomType.findFirst({
     where: { slug, isActive: true },
     include: {
@@ -183,6 +216,16 @@ export async function getAvailabilityCalendar(
     const d = new Date(startDate)
     d.setUTCDate(startDate.getUTCDate() + i)
     dates.push(d)
+  }
+
+  if (isMockMode) {
+    const roomType = mockRoomTypes.find((r) => r.id === roomTypeId)
+    return dates.map((date) => ({
+      date: date.toISOString().split("T")[0],
+      availableCount: 4,
+      price: roomType?.basePrice ?? 0,
+      isBlocked: false,
+    }))
   }
 
   const availability = await prisma.availability.findMany({

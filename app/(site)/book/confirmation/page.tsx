@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
+import { buildMockBooking } from "@/lib/mock"
 import { prisma } from "@/lib/prisma"
 import { formatCurrency } from "@/lib/utils"
 
@@ -11,18 +12,37 @@ export const metadata = {
 }
 
 type PageProps = {
-  searchParams: Promise<{ ref?: string }>
+  searchParams: Promise<{
+    ref?: string
+    roomType?: string
+    checkIn?: string
+    checkOut?: string
+    guests?: string
+    name?: string
+    email?: string
+    phone?: string
+    paid?: string
+  }>
 }
 
 export default async function BookingConfirmationPage({ searchParams }: PageProps) {
-  const { ref } = await searchParams
+  const params = await searchParams
+  const { ref } = params
   if (!ref) notFound()
 
-  const booking = await prisma.booking.findUnique({
-    where: { id: ref },
-    include: { roomType: true, hotel: true },
-  })
+  const booking =
+    ref === "mock"
+      ? buildMockBooking(params)
+      : await prisma.booking.findUnique({
+          where: { id: ref },
+          include: { roomType: true, hotel: true, payments: true },
+        })
   if (!booking) notFound()
+
+  const paid =
+    booking.id === "MOCK-DEMO"
+      ? params.paid === "1"
+      : booking.payments.some((p) => p.status === "succeeded")
 
   const currency = booking.currency || booking.hotel.currency
   const nights = Math.max(
@@ -259,17 +279,17 @@ export default async function BookingConfirmationPage({ searchParams }: PageProp
                   <div className="bg-surface-container-lowest rounded-xl p-6 md:p-8 shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-label-lg text-label-lg uppercase tracking-widest text-primary">Financial Summary</h3>
-                      <span className="font-label-sm text-label-sm uppercase bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded font-semibold">Guaranteed</span>
+                      <span className="font-label-sm text-label-sm uppercase bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded font-semibold">{paid ? "Settled In Full" : "Guaranteed"}</span>
                     </div>
                     <div className="py-4 border-b border-surface-container-high">
-                      <span className="font-label-sm text-label-sm uppercase text-outline block">Reservation Total</span>
+                      <span className="font-label-sm text-label-sm uppercase text-outline block">{paid ? "Total Amount Paid" : "Reservation Total"}</span>
                       <div className="flex items-baseline gap-2 mt-1">
                         <span className="font-headline-lg text-headline-lg text-on-surface">{formatCurrency(Number(booking.totalPrice), currency)}</span>
                         <span className="font-label-md text-label-md text-on-surface-variant uppercase font-semibold">{currency}</span>
                       </div>
                       <p className="font-body-sm text-body-sm text-secondary flex items-center gap-1.5 mt-1">
                         <span className="material-symbols-outlined text-[16px]">verified</span>
-                        Balance settled at the Villa • All local VAT included
+                        {paid ? "Zero balance due upon arrival • All local VAT included" : "Balance settled at the Villa • All local VAT included"}
                       </p>
                     </div>
                     {/* Ledger Breakdown */}
