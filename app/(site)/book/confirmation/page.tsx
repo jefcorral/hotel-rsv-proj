@@ -20,9 +20,11 @@ export default async function BookingConfirmationPage({ searchParams }: PageProp
 
   const booking = await prisma.booking.findUnique({
     where: { id: ref },
-    include: { roomType: true, hotel: true },
+    include: { roomType: true, hotel: true, payments: true },
   })
   if (!booking) notFound()
+
+  const paid = booking.payments.some((p) => p.status === "succeeded")
 
   const currency = booking.currency || booking.hotel.currency
   const nights = Math.max(
@@ -259,17 +261,17 @@ export default async function BookingConfirmationPage({ searchParams }: PageProp
                   <div className="bg-surface-container-lowest rounded-xl p-6 md:p-8 shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-label-lg text-label-lg uppercase tracking-widest text-primary">Financial Summary</h3>
-                      <span className="font-label-sm text-label-sm uppercase bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded font-semibold">Guaranteed</span>
+                      <span className="font-label-sm text-label-sm uppercase bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded font-semibold">{paid ? "Settled In Full" : "Guaranteed"}</span>
                     </div>
                     <div className="py-4 border-b border-surface-container-high">
-                      <span className="font-label-sm text-label-sm uppercase text-outline block">Reservation Total</span>
+                      <span className="font-label-sm text-label-sm uppercase text-outline block">{paid ? "Total Amount Paid" : "Reservation Total"}</span>
                       <div className="flex items-baseline gap-2 mt-1">
                         <span className="font-headline-lg text-headline-lg text-on-surface">{formatCurrency(Number(booking.totalPrice), currency)}</span>
                         <span className="font-label-md text-label-md text-on-surface-variant uppercase font-semibold">{currency}</span>
                       </div>
                       <p className="font-body-sm text-body-sm text-secondary flex items-center gap-1.5 mt-1">
                         <span className="material-symbols-outlined text-[16px]">verified</span>
-                        Balance settled at the Villa • All local VAT included
+                        {paid ? "Zero balance due upon arrival • All local VAT included" : "Balance settled at the Villa • All local VAT included"}
                       </p>
                     </div>
                     {/* Ledger Breakdown */}
