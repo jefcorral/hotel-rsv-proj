@@ -1,4 +1,5 @@
 import { PrismaClient, UserRole, RoomStatus } from "@prisma/client"
+import bcrypt from "bcryptjs"
 
 const prisma = new PrismaClient()
 
@@ -63,7 +64,7 @@ async function main() {
       email: "admin@villa-aurelia.com",
       name: "Hotel Admin",
       role: UserRole.super_admin,
-      password: null, // To be set via auth provider
+      password: await bcrypt.hash("admin123", 12),
     },
   })
 
