@@ -58,11 +58,15 @@ export function SiteHeader() {
           >
             Book Your Stay
           </Link>
-          <div className="ml-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary">
+          <Link
+            href="/account"
+            aria-label="Guest account"
+            className="ml-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary transition-colors hover:bg-primary-container"
+          >
             <span className="material-symbols-outlined text-[18px] text-on-primary">
               person
             </span>
-          </div>
+          </Link>
           <ThemeToggle />
         </div>
       </div>
