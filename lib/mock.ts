@@ -134,6 +134,57 @@ export type MockBooking = {
   payments: { status: string }[]
 }
 
+export function mockBookingsForUser(email?: string | null): MockBooking[] {
+  const upcoming = new Date(Date.now() + 14 * 86400000)
+  const upcomingEnd = new Date(Date.now() + 20 * 86400000)
+  const pastStart = new Date(Date.now() - 140 * 86400000)
+  const pastEnd = new Date(Date.now() - 135 * 86400000)
+
+  return [
+    {
+      id: "mock-booking-1",
+      guestName: "Demo Guest",
+      guestEmail: email || "guest@villa-aurelia.com",
+      guestPhone: null,
+      guestCount: 2,
+      checkIn: upcoming,
+      checkOut: upcomingEnd,
+      totalPrice: mockRoomTypes[1].basePrice * 6,
+      currency: mockHotel.currency,
+      status: "confirmed",
+      createdAt: new Date(),
+      specialRequests: null,
+      estimatedArrival: null,
+      roomType: mockRoomTypes[1],
+      hotel: mockHotel,
+      payments: [{ status: "succeeded" }],
+    },
+    {
+      id: "mock-booking-2",
+      guestName: "Demo Guest",
+      guestEmail: email || "guest@villa-aurelia.com",
+      guestPhone: null,
+      guestCount: 2,
+      checkIn: pastStart,
+      checkOut: pastEnd,
+      totalPrice: mockRoomTypes[0].basePrice * 5,
+      currency: mockHotel.currency,
+      status: "checked_out",
+      createdAt: new Date(Date.now() - 150 * 86400000),
+      specialRequests: null,
+      estimatedArrival: null,
+      roomType: mockRoomTypes[0],
+      hotel: mockHotel,
+      payments: [{ status: "succeeded" }],
+    },
+  ]
+}
+
+export function getMockBooking(id: string): MockBooking | null {
+  const booking = mockBookingsForUser().find((b) => b.id === id)
+  return booking ?? null
+}
+
 export function buildMockBooking(params: {
   roomType?: string
   checkIn?: string
